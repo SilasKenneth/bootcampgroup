@@ -109,7 +109,6 @@ class User(object):
             print("You entered an invalid option")
             cls.default()
 
-
 class Moderator(User):
     def __init__(self):
         super(Moderator, self).__init__()
@@ -117,3 +116,31 @@ class Moderator(User):
     def promote(self):
         self.role = "admin"
 
+class Comment(object):
+    def __init__(self, body):
+        if len(db.logged_in) == 0:
+            print("You must log in to comment")
+            User.default()
+        self.body = body
+        self.comment_id = 1
+        if db.comment_last_id != -1:
+            self.comment_id = db.comment_last_id + 1
+        self.owner = db.logged_in[0]
+        self.replies = []
+
+    def print(self):
+        print(self)
+        for reply in self.replies:
+            print(reply)
+
+    def __repr__(self):
+        return "%s %s by (%s)".format(self.id, self.body, self.owner.username)
+
+    def delete(self):
+        pass
+
+    def edit(self, comment_id, newbody=""):
+        if len(db.logged_in) == 0:
+            User.login()
+        if newbody.strip() == "":
+            print("You never provided any new body so we left the comment as was")
