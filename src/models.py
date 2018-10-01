@@ -109,6 +109,13 @@ class User(object):
             print("You entered an invalid option")
             cls.default()
 
+class Moderator(User):
+    def __init__(self):
+        super(Moderator, self).__init__()
+
+    def promote(self):
+        self.role = "admin"
+
 class Comment(object):
     def __init__(self, body):
         if len(db.logged_in) == 0:
