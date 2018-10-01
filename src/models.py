@@ -93,12 +93,9 @@ class Moderator(User):
     def promote(self):
         self.role = "admin"
 
-
 class Admin(Moderator):
     def __init__(self):
         super(Admin, self).__init__()
-
-
 class Comment(object):
     def __init__(self, body):
         if len(db.logged_in) == 0:
@@ -127,7 +124,7 @@ class Comment(object):
             User.login()
         if newbody.strip() == "":
             print("You never provided any new body so we left the comment as was")
-
+            
     @classmethod
     def comment(cls, parent=None):
         if parent is None:
