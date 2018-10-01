@@ -108,3 +108,12 @@ class User(object):
         else:
             print("You entered an invalid option")
             cls.default()
+
+
+class Moderator(User):
+    def __init__(self):
+        super(Moderator, self).__init__()
+
+    def promote(self):
+        self.role = "admin"
+
