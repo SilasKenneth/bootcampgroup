@@ -11,31 +11,7 @@ class User(object):
         self.logged_in = False
         self.role = "normal"
 
-    @classmethod
-    def login(cls):
-        provide_username = input("Enter a username: ").strip()
-        provided_password = input("Enter a password: ").strip()
-        if provide_username == "":
-            print("Provide a username")
-            cls.login()
-        user = cls.find_by_username(provide_username)
-        if user is None:
-            print("The username or password is incorrect.")
-            cls.login()
-        try:
-            verified = check_password_hash(user.password, provided_password)
-            if verified:
-                db.logged_in = []
-                db.logged_in.append(user)
-                user.logged_in = True
-                user.lastLoggedIn = datetime.datetime.utcnow()
-                cls.dashboard()
-            else:
-                print("The username or password is incorrect.")
-                cls.login()
-        except Exception as ex:
-            print("There was problem verifying the user. Please try again later")
-            exit(0)
+
 
     @classmethod
     def find_by_username(cls, username):
@@ -108,3 +84,61 @@ class User(object):
         else:
             print("You entered an invalid option")
             cls.default()
+
+
+class Moderator(User):
+    def __init__(self):
+        super(Moderator, self).__init__()
+
+    def promote(self):
+        self.role = "admin"
+
+
+class Admin(Moderator):
+    def __init__(self):
+        super(Admin, self).__init__()
+
+
+class Comment(object):
+    def __init__(self, body):
+        if len(db.logged_in) == 0:
+            print("You must log in to comment")
+            User.default()
+        self.body = body
+        self.comment_id = 1
+        if db.comment_last_id != -1:
+            self.comment_id = db.comment_last_id + 1
+        self.owner = db.logged_in[0]
+        self.replies = []
+
+    def print(self):
+        print(self)
+        for reply in self.replies:
+            print(reply)
+
+    def __repr__(self):
+        return "%s %s by (%s)".format(self.id, self.body, self.owner.username)
+
+    def delete(self):
+        pass
+
+    def edit(self, comment_id, newbody=""):
+        if len(db.logged_in) == 0:
+            User.login()
+        if newbody.strip() == "":
+            print("You never provided any new body so we left the comment as was")
+
+    @classmethod
+    def comment(cls, parent=None):
+        if parent is None:
+            pass
+    @classmethod
+    def reply(cls, comment_id):
+        pass
+
+    @classmethod
+    def print_all(cls):
+        pass
+
+
+User.default()
