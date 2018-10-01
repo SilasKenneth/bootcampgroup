@@ -5,7 +5,7 @@ class DB(object):
         self.users = {}
         self.comments = {}
         self.logged_in = []
-        self.comment_last_id = -1
+        self.comment_last_id = 0
         self.users_last_id = -1
 
 
